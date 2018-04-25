@@ -19,9 +19,23 @@ knex
     console.error(err);
   });
 
-let id = 1003;
+// ** Get note by id
 
-get by id
+knex('notes')
+  .select('notes.id','title','content')
+  .where('notes.id', id)
+  .then(results=> console.log(results[0]))
+  .catch(err => console.log(err));
+
+// **Update note by ID
+
+let updateObj = {title : 'Brand new new new knexy title'};
+knex('notes')
+  .update(updateObj)
+  .where('notes.id',id)
+  .returning(['notes.id','title','content'])
+  .then(results => console.log(results[0]))
+  .catch(err => console.log(err));
 
 knex('notes')
   .select('notes.id', 'title', 'content')
