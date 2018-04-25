@@ -55,6 +55,39 @@ router.put('/folders/:id', (req, res, next) => {
     .catch(err => next(err));
 });
 
+router.post('/folders', (req, res,next) => {
+  const { name }= req.body;
+  const newFolder = {name};
 
+  /***** Never trust users - validate input *****/
+  if(!newFolder.name) {
+    const err = new Error('missing `name` in requestbody');
+    err.status = 400;
+    return next(err);
+  }
+
+
+  knex  ('folders')
+    .insert(newFolder)
+    .returning(['id', 'name',])
+    .then(results => {
+
+      res.location(`http://${req.header.host}/folders/${results.id}`).status(201).json(results);
+
+    })
+    .catch(err => next(err));
+});
+
+
+router.delete('/folders/:id', (req, res, next) => {
+  const id = req.params.id;
+
+  knex ('folders')
+    .where({'folders.id':id})
+    .del()
+    .returning (['id', 'name'])
+    .then(res.sendStatus(204));
+
+});
 
 module.exports = router;
