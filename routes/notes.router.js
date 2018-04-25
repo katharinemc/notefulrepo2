@@ -62,13 +62,14 @@ router.put('/notes/:id', (req, res, next) => {
 
   /***** Never trust users - validate input *****/
   const updateObj = {};
-  const updateableFields = ['title', 'content'];
+  const updateableFields = ['title', 'content', 'folder_id', 'folderName'];
 
   updateableFields.forEach(field => {
     if (field in req.body) {
       updateObj[field] = req.body[field];
     }
   });
+console.log(updateObj);
 
   if (!updateObj.title) {
     const err = new Error('Missing `title` in request body');
@@ -76,13 +77,13 @@ router.put('/notes/:id', (req, res, next) => {
     return next(err);
   }
 
-  notes.update(id, updateObj)
-    .then(item => {
-      if (item) {
-        res.json(item);
-      } else {
-        next();
-      }
+
+  knex('notes')
+    .update(updateObj)
+    .where('notes.id', id)
+    .returning('id', 'title','content','folder_id', 'folderName')
+    .then ( results => {
+      res.json(results);
     })
     .catch(err => {
       next(err);
