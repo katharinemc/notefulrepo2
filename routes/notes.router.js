@@ -19,8 +19,10 @@ router.get('/notes', (req, res, next) => {
 
   console.log(req.query);
 
-  knex.select('notes.id', 'title', 'content', 'folders.id as folder_id', 'folders.name as folderName').from('notes')
+  knex.select('notes.id', 'title', 'content', 'folders.id as folder_id', 'note_id', 'tag_id', 'tags.name as tagName', 'folders.name as folderName').from('notes')
     .leftJoin('folders', 'notes.folder_id', 'folders.id')
+    .leftJoin('notes_tags', 'notes_tags.note_id', 'notes.id')
+    .leftJoin('tags','tags.id', 'notes_tags.tag_id' )
     .modify(function (queryBuilder) {
       if (searchTerm) {
         console.log('searched by term!');

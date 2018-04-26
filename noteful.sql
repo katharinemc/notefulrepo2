@@ -36,6 +36,32 @@
 --   ('Personal'),
 --   ('Work');
 
-SELECT * FROM notes
+-- SELECT * FROM notes
+-- LEFT JOIN folders ON notes.folder_id = folders.id
+-- WHERE notes.id = 11;.
+
+
+-- CREATE TABLE tags (
+-- id serial PRIMARY KEY,
+-- name text NOT NULL UNIQUE
+-- );
+
+
+-- CREATE TABLE notes_tags (
+--   note_id INTEGER NOT NULL REFERENCES notes ON DELETE CASCADE,
+--   tag_id INTEGER NOT NULL REFERENCES tags ON DELETE CASCADE
+-- );
+
+
+-- INSERT INTO tags (name) VAlUES 
+-- ('tag1'),
+--  ('tag2'), 
+--  ('foobar'), 
+--  ('barfoo');
+
+-- INSERT INTO notes_tags (note_id, tag_id) VALUES (2, 1), (12, 4), (3, 2), (11, 3), (10, 1);
+
+SELECT title, tags.name, folders.name FROM notes
 LEFT JOIN folders ON notes.folder_id = folders.id
-WHERE notes.id = 11;
+LEFT JOIN notes_tags ON notes.id = notes_tags.note_id
+LEFT JOIN tags ON notes_tags.tag_id = tags.id;
