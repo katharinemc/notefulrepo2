@@ -40,11 +40,15 @@ router.get('/tags/:id', (req, res, next) => {
 });
 
 //create PUT endpoint
+//tags PUT doesn't work
 router.put('/tags/:id', (req, res, next) => {
-  const id = req.params.id;
+  const updateId = req.params.id;
+  
   
   const updateObj = {};
   const updateableFields = ['name'];
+
+
 
   updateableFields.forEach(field => {
     if (field in req.body) {
@@ -58,11 +62,10 @@ router.put('/tags/:id', (req, res, next) => {
     return next(err);
   }
 
-
   knex('tags')
     .update (updateObj)
-    .where({'id': id})
-    .returning('name', 'id')
+    .where({'tags.id': updateId})
+    .returning(['name', 'id'])
     .then( (result => {
       res.location(`${req.originalUrl}/${result.id}`).status(200).json(result);
     }))

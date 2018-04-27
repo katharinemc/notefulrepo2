@@ -21,6 +21,7 @@ router.get('/folders/:id', (req, res, next) => {
   knex.select('id', 'name')
     .from('folders')
     .where({'id': reqID})
+    .returning(['id','name'])
     .then(results => {
       res.json(results);
     })
@@ -49,6 +50,7 @@ router.put('/folders/:id', (req, res, next) => {
   knex ('folders')
     .where({'id': id})
     .update(updateObj)
+    .returning(['name', 'id'])
     .then(results => {
       res.json(results);
     })
@@ -78,10 +80,8 @@ router.post('/folders', (req, res,next) => {
     .catch(err => next(err));
 });
 
-
 router.delete('/folders/:id', (req, res, next) => {
   const id = req.params.id;
-
   knex ('folders')
     .where({'folders.id':id})
     .del()
