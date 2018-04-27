@@ -14,7 +14,6 @@ const seedData = require('../db/seedData');
 const expect = chai.expect;
 
 chai.use(chaiHttp);
-
 describe('Reality check', function () {
 
   it('true should be true', function () {
